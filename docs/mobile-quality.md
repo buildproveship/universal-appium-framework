@@ -17,8 +17,7 @@ Use the existing [setup guide](../README.md#getting-started) for the runner and
 output, failure codes and its own scenario coverage. Do not treat either guide as
 an executed run record.
 
-The inspected manifest pins Appium **3.8.0**, WDIO **10.1.0**, TypeScript
-**5.9.3** and tsx **4.23.15**. The Node engine is `>=22.19.0`; the README requires
+Tool versions are pinned in `package.json` (the single source; do not copy them here). The Node engine is `>=22.19.0`; the README requires
 npm 10 or newer. `tsconfig.json` enables strict checking of runner configuration,
 steps, source, scripts and tests. The repository name is not an Appium 2 contract.
 Driver versions are not pinned in the manifest or lockfile: the existing driver
