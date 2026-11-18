@@ -2,6 +2,11 @@ import "dotenv/config";
 
 type SharedConfig = Omit<WebdriverIO.Config, "capabilities">;
 
+// Capabilities that every platform config uses; platform files add their own.
+export const sharedCapabilities = {
+  "appium:newCommandTimeout": 120,
+} satisfies WebdriverIO.Capabilities;
+
 export const sharedConfig: SharedConfig = {
   runner: "local",
   specs: ["./features/**/*.feature"],
