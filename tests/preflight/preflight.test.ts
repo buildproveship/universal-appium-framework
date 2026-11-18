@@ -50,10 +50,9 @@ test("S02 Given iOS on unsupported hosts, When checked, Then fail with a safe ma
     const report = await run(args(root, "ios", "sample.app"), { host });
     assert.equal(report.exitCode, 1);
     assert.equal(code(report, "host"), "IOS_HOST_UNSUPPORTED");
-    assert.match(
-      report.diagnostics.find((d) => d.check === "host")!.nextAction,
-      /macOS/,
-    );
+    const hostDiagnostic = report.diagnostics.find((d) => d.check === "host");
+    assert.ok(hostDiagnostic, "host diagnostic missing");
+    assert.match(hostDiagnostic.nextAction, /macOS/);
   }
   const report = await run(args(root, "ios", "sample.app"), { host: "darwin" });
   assert.equal(report.exitCode, 0);
@@ -132,7 +131,8 @@ test("S03 Given malformed, unsupported or conflicting dependencies, When checked
       cases.push(data);
     }
     const data = metadata();
-    delete data.installed[name];
+    const { [name]: _removed, ...installed } = data.installed;
+    data.installed = installed;
     cases.push(data);
   }
   const conflict = metadata();
@@ -144,7 +144,11 @@ test("S03 Given malformed, unsupported or conflicting dependencies, When checked
   for (const name of ["appium", "@wdio/cli", "typescript", "tsx"] as const) {
     const data = metadata();
     data.manifest.devDependencies[name] = "99.0.0";
-    data.lock.packages[""].devDependencies![name] = "99.0.0";
+    const lockRoot = data.lock.packages[""];
+    lockRoot.devDependencies = {
+      ...lockRoot.devDependencies,
+      [name]: "99.0.0",
+    };
     data.lock.packages[`node_modules/${name}`].version = "99.0.0";
     data.installed[name] = { version: "99.0.0" };
     cases.push(data);

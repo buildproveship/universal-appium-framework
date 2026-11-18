@@ -1,7 +1,7 @@
 // Test classification: unit
 // Review status: Not Reviewed
 // Evidence: synthetic
-// Scope: Parses .github/workflows/quality.yml and checks its run steps install with lifecycle scripts disabled and then run the offline checks; it does not run the workflow.
+// Scope: Parses .github/workflows/pr.yml and checks its run steps install with lifecycle scripts disabled and then run the offline checks; it does not run the workflow.
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -12,12 +12,9 @@ interface Workflow {
   jobs: Record<string, { steps: { run?: string }[] }>;
 }
 
-test("quality CI disables dependency lifecycle scripts and runs the offline checks explicitly", () => {
+test("pull request CI disables dependency lifecycle scripts and runs the offline checks explicitly", () => {
   const workflow = parse(
-    readFileSync(
-      resolve(__dirname, "../../.github/workflows/quality.yml"),
-      "utf8",
-    ),
+    readFileSync(resolve(__dirname, "../../.github/workflows/pr.yml"), "utf8"),
   ) as Workflow;
   // Any change to these commands needs a deliberate review rather than
   // silently weakening install safety.

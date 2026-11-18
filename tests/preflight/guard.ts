@@ -57,7 +57,10 @@ for (const [target, names] of [
   }
 }
 globalThis.fetch = forbidden;
-const appRoot = process.env.PREFLIGHT_TEST_APP_ROOT!;
+const appRoot = process.env.PREFLIGHT_TEST_APP_ROOT;
+if (appRoot === undefined) {
+  throw new Error("PREFLIGHT_TEST_APP_ROOT must be set by the preflight test");
+}
 const isApp = (path: unknown) => {
   if (typeof path !== "string") return false;
   const child = relative(appRoot, resolve(path));
