@@ -18,9 +18,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:scenarios:offline": "node --import tsx --test tests/scenarios/*.test.ts",
     "test:quality": "node --import tsx --test tests/quality/*.test.ts",
-    "check:offline": "npm run typecheck && npm run lint && npm run format:check && npm run test:quality && npm run test:preflight && npm run test:scenarios:offline && npm run test:smoke:offline"
+    "check:offline": "npm run typecheck && npm run lint && npm run format:check && npm run test:quality && npm run test:preflight && npm run test:smoke:offline"
   },
   "overrides": {
     "body-parser": "2.4.0",
@@ -30,10 +29,6 @@
     "minimatch": "11.0.5"
   },
   "devDependencies": {
-    "@cucumber/cucumber-expressions": "20.1.0",
-    "@cucumber/gherkin": "42.0.1",
-    "@cucumber/messages": "34.2.1",
-    "@cucumber/tag-expressions": "11.0.1",
     "@eslint/js": "10.0.1",
     "@types/node": "22.19.11",
     "@types/semver": "7.8.0",
