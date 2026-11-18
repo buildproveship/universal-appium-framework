@@ -1,3 +1,7 @@
+// Test classification: unit
+// Review status: Not Reviewed
+// Evidence: synthetic
+// Scope: Offline preflight option parsing, metadata, host and app-path checks with injected probes and temporary local fixtures; it does not start Appium or contact a device.
 import assert from "node:assert/strict";
 import { realpath, stat, symlink, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -69,6 +73,15 @@ test("S03 Given missing, unknown, conflicting or unsupported options, When parse
     [args(root, "android", "\u0000secret"), "VALUE_INVALID"],
     [args(root, "android", "x".repeat(4097)), "VALUE_INVALID"],
     [["--json"], "VALUE_MISSING"],
+    [[...args(root), "--"], "OPTION_UNKNOWN"],
+    [[...args(root), "-p", "android"], "OPTION_UNKNOWN"],
+    [["--platform", "--app-root", root], "VALUE_MISSING"],
+    [
+      ["--platform", "android", "--app-root", root, "--app", ""],
+      "VALUE_MISSING",
+    ],
+    [args(root, "android", "a\u009bb.apk"), "VALUE_INVALID"],
+    [Array<string>(17).fill("--json"), "OPTIONS_INVALID"],
   ];
   for (const [argv, expected] of cases) {
     let attempts = 0;

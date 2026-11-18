@@ -1,6 +1,7 @@
 import { readFile, realpath, stat } from "node:fs/promises";
-import { createRequire } from "node:module";
 import { isAbsolute, relative, resolve, sep } from "node:path";
+import { parseArgs } from "node:util";
+import semver from "semver";
 
 export type State = "verified" | "invalid" | "unavailable" | "not-checked";
 export interface Diagnostic {
@@ -32,7 +33,18 @@ export interface Probes {
   realpath(path: string): Promise<string>;
   stat(path: string): Promise<FileKind>;
 }
-const packages = ["appium", "@wdio/cli", "typescript", "tsx"] as const;
+// The supported workspace contract. The preflight verifies the manifest still
+// declares exactly this, so these are deliberately not read from package.json.
+const supportedNode = ">=22.19.0";
+const supportedPackages = {
+  appium: ">=3 <4",
+  "@wdio/cli": ">=10 <11",
+  typescript: ">=5.9 <6",
+  tsx: ">=4 <5",
+} as const;
+const packages = Object.keys(
+  supportedPackages,
+) as (keyof typeof supportedPackages)[];
 const record = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 const remote = (path: string) =>
@@ -87,31 +99,52 @@ export function wantsJson(args: readonly string[]): boolean {
   return args.includes("--json");
 }
 
+const flags = {
+  platform: { type: "string" },
+  "app-root": { type: "string" },
+  app: { type: "string" },
+  json: { type: "boolean" },
+} as const;
+
+const parseErrors: Record<string, string> = {
+  ERR_PARSE_ARGS_INVALID_OPTION_VALUE: "VALUE_MISSING",
+  ERR_PARSE_ARGS_UNKNOWN_OPTION: "OPTION_UNKNOWN",
+  ERR_PARSE_ARGS_UNEXPECTED_POSITIONAL: "OPTION_UNKNOWN",
+};
+
+const controlCharacter = /\p{Cc}/u;
+
 function parse(args: readonly string[]): Options | string {
+  if (args.length > 16) return "OPTIONS_INVALID";
+  let tokens;
+  try {
+    ({ tokens } = parseArgs({
+      args: [...args],
+      options: flags,
+      strict: true,
+      tokens: true,
+    }));
+  } catch (error) {
+    const code = record(error) ? String(error.code) : "";
+    return parseErrors[code] ?? "OPTIONS_INVALID";
+  }
   const values = new Map<string, string>();
   const seen = new Set<string>();
-  if (args.length > 16) return "OPTIONS_INVALID";
-  for (let i = 0; i < args.length; i++) {
-    const flag = args[i];
-    if (!["--platform", "--app-root", "--app", "--json"].includes(flag))
-      return "OPTION_UNKNOWN";
-    if (seen.has(flag)) return "OPTION_CONFLICT";
-    seen.add(flag);
-    if (flag === "--json") continue;
-    const value = args[++i];
-    if (!value || value.startsWith("--")) return "VALUE_MISSING";
-    if (
-      value.length > 4096 ||
-      [...value].some(
-        (char) => char.charCodeAt(0) < 32 || char.charCodeAt(0) === 127,
-      )
-    )
+  for (const token of tokens) {
+    // Only the exact `--flag value` form is accepted: no `--flag=value`, no `--`.
+    if (token.kind !== "option" || token.inlineValue) return "OPTION_UNKNOWN";
+    if (seen.has(token.name)) return "OPTION_CONFLICT";
+    seen.add(token.name);
+    if (token.name === "json") continue;
+    const value = token.value;
+    if (!value) return "VALUE_MISSING";
+    if (value.length > 4096 || controlCharacter.test(value))
       return "VALUE_INVALID";
-    values.set(flag, value);
+    values.set(token.name, value);
   }
-  const platform = values.get("--platform");
-  const root = values.get("--app-root");
-  const app = values.get("--app");
+  const platform = values.get("platform");
+  const root = values.get("app-root");
+  const app = values.get("app");
   if (!platform || !root || !app) return "VALUE_MISSING";
   if (platform !== "android" && platform !== "ios")
     return "PLATFORM_UNSUPPORTED";
@@ -246,14 +279,8 @@ function metadataFailure(
 
 async function checkMetadata(probes: Probes, add: Add) {
   let metadata: unknown;
-  let satisfiesRange: (version: string, range: string) => boolean;
-  let valid: (version: string) => string | null;
   try {
     metadata = await probes.metadata();
-    // Reuse the maintained parser from the locked tree without executing mobile packages.
-    const require = createRequire(__filename);
-    satisfiesRange = require("semver/functions/satisfies");
-    valid = require("semver/functions/valid");
   } catch (error) {
     const state = error instanceof SyntaxError ? "invalid" : "unavailable";
     metadataFailure(
@@ -285,9 +312,9 @@ async function checkMetadata(probes: Probes, add: Add) {
   const range = metadata.manifest.engines.node;
   // Only the current supported workspace contract is accepted, not an invented range.
   const runtimeValid =
-    range === ">=22.19.0" &&
-    valid(probes.nodeVersion) !== null &&
-    satisfiesRange(probes.nodeVersion, range);
+    range === supportedNode &&
+    semver.valid(probes.nodeVersion) !== null &&
+    semver.satisfies(probes.nodeVersion, range);
   add(
     "runtime",
     runtimeValid ? "verified" : "invalid",
@@ -295,7 +322,7 @@ async function checkMetadata(probes: Probes, add: Add) {
     runtimeValid
       ? "Node satisfies the supported workspace range."
       : "Node or its supported range is incompatible.",
-    "Use the repository-supported Node version (>=22.19.0).",
+    `Use the repository-supported Node version (${supportedNode}).`,
   );
   const declared = metadata.manifest.devDependencies;
   const locked = metadata.lock.packages;
@@ -310,23 +337,14 @@ async function checkMetadata(probes: Probes, add: Add) {
       const actual = installed[name];
       return (
         typeof version === "string" &&
-        valid(version) !== null &&
+        semver.valid(version) !== null &&
         record(entry) &&
         record(actual) &&
         record(rootLock.devDependencies) &&
         rootLock.devDependencies[name] === version &&
         entry.version === version &&
         actual.version === version &&
-        satisfiesRange(
-          version,
-          name === "appium"
-            ? ">=3 <4"
-            : name === "@wdio/cli"
-              ? ">=10 <11"
-              : name === "typescript"
-                ? ">=5.9 <6"
-                : ">=4 <5",
-        )
+        semver.satisfies(version, supportedPackages[name])
       );
     });
   add(
