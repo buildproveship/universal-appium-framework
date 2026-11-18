@@ -16,8 +16,8 @@
     "test:smoke:offline": "node --import tsx --test tests/smoke/*.test.ts",
     "test:preflight": "node --import tsx --test tests/preflight/*.test.ts",
     "lint": "eslint .",
-    "format": "prettier --write \"src/**/*.ts\" \"scripts/**/*.ts\" \"tests/**/*.ts\" \"docs/**/*.md\" \"features/**/*.ts\" \"*.ts\" \"*.json\" \".github/workflows/*.yml\" \".github/copilot-instructions.md\" \"README.md\"",
-    "format:check": "prettier --check \"src/**/*.ts\" \"scripts/**/*.ts\" \"tests/**/*.ts\" \"docs/**/*.md\" \"features/**/*.ts\" \"*.ts\" \"*.json\" \".github/workflows/*.yml\" \".github/copilot-instructions.md\" \"README.md\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test:scenarios:offline": "node --import tsx --test tests/scenarios/*.test.ts",
     "test:quality": "node --import tsx --test tests/quality/*.test.ts",
     "check:offline": "npm run typecheck && npm run lint && npm run format:check && npm run test:quality && npm run test:preflight && npm run test:scenarios:offline && npm run test:smoke:offline"
@@ -38,7 +38,7 @@
     "@types/node": "22.19.11",
     "@types/semver": "7.8.0",
     "@wdio/allure-reporter": "10.1.0",
-    "@wdio/appium-service": "10.1.0",
+    "@wdio/appium-service": "10.1.1",
     "@wdio/cli": "10.1.0",
     "@wdio/cucumber-framework": "10.1.0",
     "@wdio/globals": "10.1.0",
@@ -48,11 +48,12 @@
     "dotenv": "18.0.8",
     "eslint": "10.13.0",
     "glob": "14.0.4",
-    "globals": "17.13.0",
+    "globals": "17.14.0",
     "prettier": "3.9.10",
     "semver": "7.8.5",
     "tsx": "4.23.15",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.72.0"
+    "typescript-eslint": "8.72.0",
+    "yaml": "2.9.1"
   }
 }
