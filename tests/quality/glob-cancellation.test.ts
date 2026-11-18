@@ -1,3 +1,7 @@
+// Test classification: unit
+// Review status: Not Reviewed
+// Evidence: synthetic
+// Scope: Checks the overridden glob release keeps normal discovery and rejects pre-aborted traversals without reading directories; it does not exercise Appium itself.
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { glob, globSync } from "glob";

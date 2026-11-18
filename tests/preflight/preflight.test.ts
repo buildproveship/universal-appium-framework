@@ -86,13 +86,13 @@ test("S03 Given missing, unknown, conflicting or unsupported options, When parse
   for (const [argv, expected] of cases) {
     let attempts = 0;
     const report = await run(argv, {
-      metadata: async () => {
+      metadata: () => {
         attempts++;
-        throw new Error("must not probe");
+        return Promise.reject(new Error("must not probe"));
       },
-      realpath: async () => {
+      realpath: () => {
         attempts++;
-        throw new Error("must not probe");
+        return Promise.reject(new Error("must not probe"));
       },
     });
     assert.equal(report.exitCode, 1);
@@ -150,7 +150,9 @@ test("S03 Given malformed, unsupported or conflicting dependencies, When checked
     cases.push(data);
   }
   for (const data of cases) {
-    const report = await run(args(root), { metadata: async () => data });
+    const report = await run(args(root), {
+      metadata: () => Promise.resolve(data),
+    });
     assert.equal(report.exitCode, 1);
     assert.ok(report.diagnostics.some((d) => d.state === "invalid"));
   }
@@ -193,9 +195,7 @@ test("S03/S06 Given actual local dependency metadata, When missing, malformed, o
 test("S03/S06 Given metadata failures, When reported, Then preserve dependency and unchecked runtime diagnostics in order", async () => {
   for (const failure of [
     {
-      metadata: async () => {
-        throw new Error("private read failure");
-      },
+      metadata: () => Promise.reject(new Error("private read failure")),
       state: "unavailable",
       code: "METADATA_UNAVAILABLE",
       message: "Required local dependency metadata could not be checked.",
@@ -203,9 +203,7 @@ test("S03/S06 Given metadata failures, When reported, Then preserve dependency a
         "Restore the repository manifest, lockfile and locked dependencies in a separate setup step.",
     },
     {
-      metadata: async () => {
-        throw new SyntaxError("private parse failure");
-      },
+      metadata: () => Promise.reject(new SyntaxError("private parse failure")),
       state: "invalid",
       code: "METADATA_INVALID",
       message: "Required local dependency metadata could not be checked.",
@@ -213,7 +211,7 @@ test("S03/S06 Given metadata failures, When reported, Then preserve dependency a
         "Restore the repository manifest, lockfile and locked dependencies in a separate setup step.",
     },
     {
-      metadata: async () => null,
+      metadata: () => Promise.resolve(null),
       state: "invalid",
       code: "METADATA_INVALID",
       message: "Required dependency metadata is malformed.",
@@ -268,9 +266,9 @@ test("S04 Given remote, outside-root or unsupported paths, When checked, Then re
   for (const [argv, expected] of cases) {
     let attempts = 0;
     const report = await run(argv, {
-      realpath: async () => {
+      realpath: () => {
         attempts++;
-        throw new Error("must not inspect");
+        return Promise.reject(new Error("must not inspect"));
       },
     });
     assert.equal(report.exitCode, 1);
@@ -330,9 +328,7 @@ test("S05/S06 Given secret-bearing inaccessible probes, When reported, Then stat
   const canary = "SECRET_CANARY_TOKEN_WITH_PRIVATE_PATH";
   for (const error of [new Error(canary), new SyntaxError(canary)]) {
     const report = await run(args(root), {
-      metadata: async () => {
-        throw error;
-      },
+      metadata: () => Promise.reject(error),
     });
     assert.equal(report.exitCode, 1);
     assert.equal(code(report, "runtime"), "METADATA_REQUIRED");
@@ -348,9 +344,8 @@ test("S05/S06 Given secret-bearing inaccessible probes, When reported, Then stat
     }
   }
   const report = await run(args(root), {
-    stat: async () => {
-      throw Object.assign(new Error(canary), { code: "EACCES" });
-    },
+    stat: () =>
+      Promise.reject(Object.assign(new Error(canary), { code: "EACCES" })),
   });
   assert.equal(report.exitCode, 1);
   assert.equal(code(report, "app-path"), "APP_UNAVAILABLE");

@@ -1,3 +1,7 @@
+// Test classification: integration
+// Review status: Not Reviewed
+// Evidence: synthetic
+// Scope: Lints synthetic snippets with the repository's real ESLint configuration to prove promise-misuse rules are enforced; it does not execute the snippets.
 import assert from "node:assert/strict";
 import { resolve } from "node:path";
 import { test } from "node:test";
