@@ -89,9 +89,9 @@ and then invokes the offline checks explicitly. Its command regression test keep
 dependency lifecycle scripts disabled; it does not authorize mobile setup.
 
 This aggregate runs type-checking, lint, formatting, lint-rule regression checks,
-offline preflight, scenario preparation, and hierarchy-validation tests. Individual
+offline preflight, and hierarchy-validation tests. Individual
 commands remain available as `typecheck`, `lint`, `format:check`, `test:quality`,
-`test:preflight`, `test:scenarios:offline`, and `test:smoke:offline`.
+`test:preflight`, and `test:smoke:offline`.
 
 Type-aware lint rejects promises used as synchronous conditions, void-returning
 callbacks, or object spreads. The regression checks feed invalid and valid code to
