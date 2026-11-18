@@ -43,12 +43,13 @@ export function probes(overrides: Partial<Probes> = {}): Probes {
   return {
     nodeVersion: "22.19.0",
     host: "linux",
-    metadata: async () => metadata(),
-    realpath: async (path) => path,
-    stat: async (path) => ({
-      isFile: () => path.endsWith(".apk"),
-      isDirectory: () => !path.endsWith(".apk"),
-    }),
+    metadata: () => Promise.resolve(metadata()),
+    realpath: (path) => Promise.resolve(path),
+    stat: (path) =>
+      Promise.resolve({
+        isFile: () => path.endsWith(".apk"),
+        isDirectory: () => !path.endsWith(".apk"),
+      }),
     ...overrides,
   };
 }

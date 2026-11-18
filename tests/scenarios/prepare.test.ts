@@ -1,3 +1,7 @@
+// Test classification: unit
+// Review status: Not Reviewed
+// Evidence: synthetic
+// Scope: Compiles synthetic Gherkin and reviewed step mappings through prepareScenarios to check selection, mapping and blocking rules; it does not load step files or run scenarios.
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {

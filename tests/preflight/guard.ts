@@ -76,7 +76,11 @@ for (const target of [fs, fsPromises]) {
     Object.defineProperty(target, name, {
       value: (path: unknown, ...args: unknown[]) => {
         if (isApp(path)) return forbidden();
-        return Reflect.apply(original, target, [path, ...args]);
+        const result: unknown = Reflect.apply(original, target, [
+          path,
+          ...args,
+        ]);
+        return result;
       },
     });
   }

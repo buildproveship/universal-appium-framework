@@ -1,3 +1,7 @@
+// Test classification: integration
+// Review status: Not Reviewed
+// Evidence: synthetic
+// Scope: Runs the preflight CLI as a child process against temporary synthetic app roots with network, process and write calls blocked; it does not start Appium or contact a device.
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { readdir, readFile, symlink } from "node:fs/promises";
