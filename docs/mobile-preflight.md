@@ -91,15 +91,7 @@ Given/When/Then names; they do not require Cucumber's device runner. All app fix
 are synthetic files/directories made in owned temporary roots and cleaned afterwards;
 they are deliberately not installable applications.
 
-| Jira scenario | Executable evidence in `tests/preflight/`                                                                                                      |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| S01           | Supported Android metadata and actual CLI success; all execution checks remain unverified                                                      |
-| S02           | Injected Linux/Windows iOS failure and macOS host-only success                                                                                 |
-| S03           | Missing/unknown/duplicate/malformed options, Node semver boundaries, unsupported/conflicting/malformed dependency metadata; CLI negative cases |
-| S04           | Remote/outside/sibling paths, missing/wrong-kind fixtures, direct and ancestor symlink escapes, contained symlinks; actual CLI failures        |
-| S05           | Actual CLI success/error paths under network/subprocess/write/app-read guards; secret canaries and unchanged fixtures                          |
-| S06           | Inaccessible filesystem/metadata doubles, invalid/unavailable/not-checked/verified distinctions, automatic test-only labeling                  |
-| S07           | Strict checks, full offline suite and actual CLI; recorded red-to-green regression evidence in the PR                                          |
+The RRDMOBILE-9 scenario-to-test trace is in [docs/history](history/rrdmobile-9-preflight.md).
 
 The CLI harness spawns Node only to exercise the actual entrypoint. It loads the
 existing tsx TypeScript launcher before arming test-only side-effect guards; launcher
@@ -118,5 +110,3 @@ rejection in `checkApp`, run the S04 test by name, observe a nonzero test exit, 
 restore that exact rule and rerun. Never leave the mutation in the committed tree.
 Locked installation requires separate permission and a supported, clean dependency
 workspace; do not substitute tooling or claim a blocked installation passed.
-Done requires all seven offline criteria evidenced, independent review clear, and
-the PR merged. Real-device execution remains explicitly unverified even then.
