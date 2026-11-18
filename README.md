@@ -1,6 +1,6 @@
 # Universal Mobile E2E Testing Template
 
-A reusable starting point for native Android and iOS end-to-end tests using Appium 3, WebdriverIO 10, Cucumber, TypeScript, and Page Object Models. This is the single maintained framework implementation; it replaces the previous Appium 2 and Jest setup with WebdriverIO's official Cucumber runner integration.
+A reusable starting point for native Android and iOS end-to-end tests using Appium 3, WebdriverIO 10, Cucumber, TypeScript, and Page Object Models.
 
 It includes a generic app-launch smoke scenario. Product teams can add their app-specific features and Page Object Models without inheriting product-specific selectors or test data.
 
@@ -12,7 +12,7 @@ It includes a generic app-launch smoke scenario. Product teams can add their app
 - The app under test as an Android APK or iOS app bundle
 
 Appium is installed as a project development dependency. Its platform drivers are managed using the Appium CLI.
-Pinned npm overrides keep Appium's transitive `sharp` and `shell-quote` dependencies on patched releases; re-evaluate these overrides when upgrading Appium.
+Pinned npm `overrides` in `package.json` keep transitive dependencies on patched releases: `sharp`, `shell-quote` and `body-parser` (via Appium), and `glob` and `minimatch` (via Appium, WDIO and ESLint). Re-evaluate them whenever Appium, WDIO or ESLint is upgraded.
 
 ## Getting started
 
