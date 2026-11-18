@@ -1,13 +1,9 @@
 {
+  "extends": "@releaseready/config/tsconfig.json",
   "compilerOptions": {
-    "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "strict": true,
     "noEmit": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "types": ["node", "@wdio/globals/types", "@wdio/cucumber-framework"]
   },
   "include": [

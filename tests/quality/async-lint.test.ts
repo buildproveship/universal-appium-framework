@@ -1,7 +1,7 @@
 // Test classification: integration
 // Review status: Not Reviewed
 // Evidence: synthetic
-// Scope: Lints synthetic snippets with the repository's real ESLint configuration to prove promise-misuse rules are enforced; it does not execute the snippets.
+// Scope: Lints synthetic snippets with the repository's real ESLint configuration to prove promise-misuse rules (no-misused-promises, no-misused-spread) are enforced; it does not execute the snippets.
 import assert from "node:assert/strict";
 import { resolve } from "node:path";
 import { test } from "node:test";
@@ -10,25 +10,34 @@ import { ESLint } from "eslint";
 const root = resolve(__dirname, "../..");
 const eslint = new ESLint({ cwd: root });
 const filePath = resolve(root, "src/page-objects/app.page.ts");
-const rule = "@typescript-eslint/no-misused-promises";
 
 // lintText uses a real project-covered path but never writes or executes a snippet.
 const invalid = [
-  ["condition", 'export const ready = Promise.resolve(true) ? "yes" : "no";'],
+  [
+    "condition",
+    'export const ready = Promise.resolve(true) ? "yes" : "no";',
+    "@typescript-eslint/no-misused-promises",
+  ],
   [
     "void callback",
     "export const timer = setTimeout(async () => { await Promise.resolve(); }, 0);",
+    "@typescript-eslint/no-misused-promises",
   ],
-  ["spread", "export const copied = { ...Promise.resolve({ ready: true }) };"],
+  [
+    "spread",
+    "export const copied = { ...Promise.resolve({ ready: true }) };",
+    "@typescript-eslint/no-misused-spread",
+  ],
 ] as const;
 
-for (const [kind, source] of invalid) {
+for (const [kind, source, rule] of invalid) {
   test(`typed lint rejects a promise used as a synchronous ${kind}`, async () => {
     const [result] = await eslint.lintText(source, { filePath });
     assert.equal(result.fatalErrorCount, 0, JSON.stringify(result.messages));
-    assert.equal(result.errorCount, 1, JSON.stringify(result.messages));
-    assert.equal(result.messages[0]?.ruleId, rule);
-    assert.equal(result.messages[0]?.severity, 2);
+    // Other strict rules may also flag a snippet (a promise is always truthy); this test is about the promise rule.
+    const promiseErrors = result.messages.filter((m) => m.ruleId === rule);
+    assert.equal(promiseErrors.length, 1, JSON.stringify(result.messages));
+    assert.equal(promiseErrors[0]?.severity, 2);
   });
 }
 
@@ -40,7 +49,9 @@ test("typed lint accepts awaited values and synchronous callbacks", async () => 
       return copied.ready ? "yes" : "no";
     }
     export const timer = setTimeout(() => {
-      void ready().catch(() => {});
+      void ready().catch((error: unknown) => {
+        console.error(error);
+      });
     }, 0);`,
     { filePath },
   );

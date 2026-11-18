@@ -15,7 +15,7 @@
     "preflight:mobile": "tsx scripts/mobile-preflight.ts",
     "test:smoke:offline": "node --import tsx --test tests/smoke/*.test.ts",
     "test:preflight": "node --import tsx --test tests/preflight/*.test.ts",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:quality": "node --import tsx --test tests/quality/*.test.ts",
@@ -29,7 +29,7 @@
     "minimatch": "11.0.5"
   },
   "devDependencies": {
-    "@eslint/js": "10.0.1",
+    "@releaseready/config": "1.0.0",
     "@types/node": "22.19.11",
     "@types/semver": "7.8.0",
     "@wdio/allure-reporter": "10.1.0",
@@ -43,12 +43,11 @@
     "dotenv": "18.0.8",
     "eslint": "10.13.0",
     "glob": "14.0.4",
-    "globals": "17.14.0",
     "prettier": "3.9.10",
     "semver": "7.8.5",
     "tsx": "4.23.15",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.72.0",
     "yaml": "2.9.1"
-  }
+  },
+  "prettier": "@releaseready/config/prettier"
 }

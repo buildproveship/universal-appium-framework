@@ -359,7 +359,7 @@ async function checkMetadata(probes: Probes, add: Add) {
 }
 
 async function checkApp(options: Options, probes: Probes, add: Add) {
-  const fail = (state: State, code: string, message: string) =>
+  const fail = (state: State, code: string, message: string) => {
     add(
       "app-path",
       state,
@@ -367,6 +367,7 @@ async function checkApp(options: Options, probes: Probes, add: Add) {
       message,
       "Select an accessible owned local .apk file or .app directory under --app-root.",
     );
+  };
   if (remote(options.root) || remote(options.app)) {
     fail(
       "invalid",

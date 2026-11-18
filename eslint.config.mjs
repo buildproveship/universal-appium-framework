@@ -1,39 +1,9 @@
-import js from "@eslint/js";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+// ESLint: the shared @releaseready/config rules (type-aware through the TypeScript project service).
+import { releaseready } from "@releaseready/config/eslint";
+import { defineConfig } from "eslint/config";
 
-export default tseslint.config(
-  {
-    ignores: ["node_modules/**", "allure-results/**", "apps/**"],
-  },
-  js.configs.recommended,
-  {
-    files: ["**/*.mjs"],
-    languageOptions: { globals: globals.node },
-  },
-  {
-    files: ["**/*.ts"],
-    extends: [tseslint.configs.recommendedTypeChecked],
-    languageOptions: {
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-    rules: {
-      // node:test's test()/describe() return promises the runner awaits itself.
-      "@typescript-eslint/no-floating-promises": [
-        "error",
-        {
-          allowForKnownSafeCalls: [
-            {
-              from: "package",
-              name: ["test", "describe", "it", "suite"],
-              package: "node:test",
-            },
-          ],
-        },
-      ],
-    },
-  },
+export default defineConfig(
+  releaseready({ tsconfigRootDir: import.meta.dirname }),
+  // App binaries are local-only build output.
+  { ignores: ["apps/**"] },
 );

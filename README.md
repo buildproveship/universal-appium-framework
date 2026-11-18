@@ -64,7 +64,7 @@ src/
 apps/                     # Local app binaries; gitignored
 .github/
   copilot-instructions.md
-  workflows/quality.yml
+  workflows/pr.yml        # Offline checks on every pull request
 wdio.shared.conf.ts       # Shared runner, Cucumber, Appium service, reporters
 wdio.android.conf.ts      # Android capabilities
 wdio.ios.conf.ts          # iOS capabilities
@@ -78,17 +78,19 @@ The included smoke scenario checks that Appium can retrieve a non-empty native v
 
 ## Quality checks
 
-Run the same bounded checks before committing and in the existing quality workflow:
+Run the same bounded checks before committing; `.github/workflows/pr.yml` runs them on every pull request:
 
 ```sh
 npm run check:offline
 ```
 
-The quality workflow installs locked dependencies with `npm ci --ignore-scripts`
+The pull request workflow installs locked dependencies with `npm ci --ignore-scripts`
 and then invokes the offline checks explicitly. Its command regression test keeps
 dependency lifecycle scripts disabled; it does not authorize mobile setup.
 
-This aggregate runs type-checking, lint, formatting, lint-rule regression checks,
+ESLint, Prettier and the tsconfig base come from the shared `@releaseready/config` package
+(`.npmrc` points the `@releaseready` scope at GitHub Packages; a local install needs a token with
+`read:packages`). This aggregate runs type-checking, lint, formatting, lint-rule regression checks,
 offline preflight, and hierarchy-validation tests. Individual
 commands remain available as `typecheck`, `lint`, `format:check`, `test:quality`,
 `test:preflight`, and `test:smoke:offline`.
