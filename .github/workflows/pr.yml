@@ -32,3 +32,13 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Type-check, lint, format and test offline contracts
         run: npm run check:offline
+  security:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: gitleaks, trivy, semgrep and zizmor
+        uses: releaseready/config/.github/actions/security-scan@6248d46f291d5a3eec87fdf07da5e8f2b1b5becb # v2.1.0
