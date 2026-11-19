@@ -16,8 +16,8 @@ Pinned npm `overrides` in `package.json` keep transitive dependencies on patched
 
 ## Getting started
 
-For read-only setup diagnostics, use the [offline mobile preflight](docs/mobile-preflight.md).
-It never starts Appium or contacts a device; a successful result is not mobile readiness.
+For setup diagnostics, use the [mobile setup check](docs/mobile-setup-check.md) (`npm ls --all`,
+`engine-strict` and `appium driver doctor`). A successful result is not mobile readiness.
 
 1. Install Node.js and dependencies:
 
@@ -91,9 +91,9 @@ dependency lifecycle scripts disabled; it does not authorize mobile setup.
 ESLint, Prettier and the tsconfig base come from the shared `@releaseready/config` package
 (`.npmrc` points the `@releaseready` scope at GitHub Packages; a local install needs a token with
 `read:packages`). This aggregate runs type-checking, lint, formatting, lint-rule regression checks,
-offline preflight, and hierarchy-validation tests. Individual
+app-path check tests, and hierarchy-validation tests. Individual
 commands remain available as `typecheck`, `lint`, `format:check`, `test:quality`,
-`test:preflight`, and `test:smoke:offline`.
+`test:setup`, and `test:smoke:offline`.
 
 Type-aware lint rejects promises used as synchronous conditions, void-returning
 callbacks, or object spreads. The regression checks feed invalid and valid code to

@@ -13,15 +13,18 @@
     "appium:drivers:android": "appium driver install uiautomator2",
     "appium:drivers:ios": "appium driver install xcuitest",
     "typecheck": "tsc --noEmit",
-    "preflight:mobile": "tsx scripts/mobile-preflight.ts",
+    "setup:check": "npm ls --all",
+    "setup:check:android": "npm run setup:check && appium driver doctor uiautomator2",
+    "setup:check:ios": "npm run setup:check && appium driver doctor xcuitest",
+    "setup:check:app": "tsx scripts/check-app-path.ts",
     "test:smoke:offline": "node --import tsx --test tests/smoke/*.test.ts",
-    "test:preflight": "node --import tsx --test tests/preflight/*.test.ts",
+    "test:setup": "node --import tsx --test tests/setup/*.test.ts",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:quality": "node --import tsx --test tests/quality/*.test.ts",
     "check:guardrails": "releaseready-guardrails",
-    "check:offline": "npm run typecheck && npm run lint && npm run format:check && npm run check:guardrails && npm run test:quality && npm run test:preflight && npm run test:smoke:offline"
+    "check:offline": "npm run typecheck && npm run lint && npm run format:check && npm run check:guardrails && npm run test:quality && npm run test:setup && npm run test:smoke:offline"
   },
   "overrides": {
     "body-parser": "2.4.0",
@@ -33,7 +36,6 @@
   "devDependencies": {
     "@releaseready/config": "^2.0.1",
     "@types/node": "22.19.11",
-    "@types/semver": "7.8.0",
     "@wdio/allure-reporter": "10.1.0",
     "@wdio/appium-service": "10.1.1",
     "@wdio/cli": "10.1.0",
@@ -46,7 +48,6 @@
     "eslint": "10.13.0",
     "glob": "14.0.4",
     "prettier": "3.9.10",
-    "semver": "7.8.5",
     "tsx": "4.23.15",
     "typescript": "5.9.3",
     "yaml": "2.9.1"

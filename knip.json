@@ -1,4 +1,4 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "entry": ["features/step-definitions/**/*.ts", "tests/preflight/guard.ts"]
+  "entry": ["features/step-definitions/**/*.ts"]
 }
