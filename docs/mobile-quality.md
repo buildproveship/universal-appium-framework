@@ -8,8 +8,8 @@ trace are in [docs/history](history/rrdmobile-6-mobile-quality.md).
 ## Setup boundary and supported platforms
 
 Use the existing [setup guide](../README.md#getting-started) for the runner and
-[RRDMOBILE-9 offline preflight guide](mobile-preflight.md) for diagnostic flags,
-output, failure codes and its own scenario coverage. Do not treat either guide as
+[mobile setup check](mobile-setup-check.md) for the RRDMOBILE-9 diagnostics
+(`npm ls --all`, `engine-strict`, `appium driver doctor`, app-path check). Do not treat either guide as
 an executed run record.
 
 Tool versions are pinned in `package.json` (the single source; do not copy them here). The Node engine is `>=22.19.0`; the README requires
@@ -28,8 +28,7 @@ Record the actual installed driver version for every execution environment.
 
 The generic device names and `./apps/your-app.*` paths are examples, not discovered
 devices or usable builds. Configuration reads `.env` through the shared WDIO
-configuration; preflight does not load it, validate capabilities or gate WDIO.
-Preflight's path restrictions must not be attributed to the device runner.
+configuration; the setup check does not load it, validate capabilities or gate WDIO.
 Android configuration sets `autoGrantPermissions: true`, so permitted actions must
 cover that behavior before execution. No approved target/build, device profile,
 signing/install rights, reset ownership or test-data authority is supplied by this
@@ -52,17 +51,14 @@ With locked dependencies already installed, the existing offline commands are:
 npm run typecheck
 npm run lint
 npm run format:check
-npm run test:preflight
+npm run test:setup
 ```
 
 These are reproducible checks, not results from this documentation change.
 Typecheck, lint and formatting check source properties; none executes an app.
-`test:preflight` runs Node test-runner tests with synthetic app paths, injected
-probes and a guarded actual CLI harness. Its `local-offline` report does not turn a
-synthetic fixture into an installable build; injected probes are `test-only`.
-Retain the report's `not-checked`/`NOT_VERIFIED` device boundaries even at exit 0.
-The linked preflight guide owns the full diagnostic contract and RRDMOBILE-9
-traceability; those tests do not become RRDMOBILE-6 device acceptance.
+`test:setup` runs Node test-runner tests of the app-path check with synthetic paths;
+they do not turn a synthetic fixture into an installable build or become RRDMOBILE-6
+device acceptance. `appium driver doctor` output is local tooling evidence, not a device pass.
 
 | Evidence class                      | Record                                                                                                                                       | What it cannot establish                                                                                               |
 | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
@@ -76,7 +72,7 @@ traceability; those tests do not become RRDMOBILE-6 device acceptance.
 
 | Observation                                               | Safe next action and owner boundary                                                                                                                                                                                                                                                                                      |
 | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Offline input, metadata or app-path failure               | Use the preflight diagnostic's stable code and `nextAction`; correct explicit owned local inputs or have the repository/setup owner reconcile locked dependencies under separate approval. Do not bypass containment or substitute a successful fixture for the intended build.                                          |
+| Offline input, metadata or app-path failure               | Use the `npm ls --all`, `appium driver doctor` or app-path check output; correct explicit owned local inputs or have the repository/setup owner reconcile locked dependencies under separate approval. Do not bypass containment or substitute a successful fixture for the intended build.                              |
 | Missing Android SDK/JDK/driver or unavailable device      | Report the exact missing prerequisite and platform/profile as blocked. Ask the platform/target owner to prepare approved access; do not buy a provider, install tooling or contact another device automatically.                                                                                                         |
 | iOS requested on Linux/Windows or without Xcode/simulator | Report the unsupported host or missing toolchain precisely. Require a separately approved macOS/Xcode environment and suitable app; do not count an injected macOS probe or Linux Docker as iOS proof.                                                                                                                   |
 | Appium/session launch failure                             | Preserve safe error evidence and the exact build/profile/toolchain context. Shared WDIO configuration uses the Appium service to start/stop its server, but this is not cleanup proof for every failure. Verify only the owned session/resource with the approved owner before retrying; never kill unrelated processes. |
