@@ -3,8 +3,8 @@ import { isAbsolute, relative, resolve, sep } from "node:path";
 import { parseArgs } from "node:util";
 import semver from "semver";
 
-export type State = "verified" | "invalid" | "unavailable" | "not-checked";
-export interface Diagnostic {
+type State = "verified" | "invalid" | "unavailable" | "not-checked";
+interface Diagnostic {
   check: string;
   state: State;
   code: string;
