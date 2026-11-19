@@ -6,6 +6,7 @@
   "engines": {
     "node": ">=22.19.0"
   },
+  "packageManager": "npm@11.4.2",
   "scripts": {
     "test:android": "wdio run ./wdio.android.conf.ts",
     "test:ios": "wdio run ./wdio.ios.conf.ts",
