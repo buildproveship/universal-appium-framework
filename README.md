@@ -119,3 +119,7 @@ The WDIO spec reporter prints results in the console. The Allure reporter writes
 ## AI-assisted authoring
 
 The repository-level Copilot instructions provide conventions for AI-assisted scenario and Page Object Model authoring. Treat generated tests as drafts: verify selectors with the app team and run tests against the target app. AI is not part of the execution or pass/fail path.
+
+## Licence
+
+Apache-2.0. See [LICENSE](LICENSE).
