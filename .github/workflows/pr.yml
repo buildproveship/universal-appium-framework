@@ -1,44 +1,19 @@
-# Light pull request checks. Owner decision of 18 Nov 2026 (docs/decisions.md): typecheck, lint, format and the offline
-# contract tests run on every pull request. This replaces the 12 Nov 2026 manual-only Actions decision (RRDPLAT-44) for
-# this light set only. The Appium device suites (npm run test:android / test:ios) need an app binary and a device or
-# simulator, which this template does not ship, so they stay local and have no nightly workflow.
+# No `paths-ignore` here: a required check that never starts stays pending, so docs-only PRs are skipped inside the
+# workflow, where the required job `ci` still reports.
 name: Pull request
 on:
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
 permissions:
   contents: read
+  pull-requests: read
   packages: read
-concurrency:
-  group: pr-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
 jobs:
-  checks:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-          registry-url: https://npm.pkg.github.com
-          scope: "@releaseready"
-      - name: Install dependencies (lifecycle scripts disabled)
-        run: npm ci --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Type-check, lint, format and test offline contracts
-        run: npm run check:offline
-  security:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - name: gitleaks, trivy, semgrep and zizmor
-        uses: releaseready/config/.github/actions/security-scan@6248d46f291d5a3eec87fdf07da5e8f2b1b5becb # v2.1.0
+  ci:
+    uses: releaseready/config/.github/workflows/reusable-ci.yml@cb14844935500578e1bb2d18c95d8f58c8f9fdd0
+    with:
+      runner: ubuntu-24.04
+      check-command: "npm run check:offline"

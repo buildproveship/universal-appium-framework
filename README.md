@@ -84,9 +84,10 @@ Run the same bounded checks before committing; `.github/workflows/pr.yml` runs t
 npm run check:offline
 ```
 
-The pull request workflow installs locked dependencies with `npm ci --ignore-scripts`
-and then invokes the offline checks explicitly. Its command regression test keeps
-dependency lifecycle scripts disabled; it does not authorize mobile setup.
+The pull request workflow calls the shared CI in `releaseready/config`, which installs locked
+dependencies with `npm ci` and runs `npm run check:offline`. `.npmrc` sets `ignore-scripts=true`, so
+dependency lifecycle scripts stay disabled everywhere; the install-policy test keeps both in place. It
+does not authorize mobile setup. Run `npx releaseready-hooks install` once per clone to install the git hooks.
 
 ESLint, Prettier and the tsconfig base come from the shared `@releaseready/config` package
 (`.npmrc` points the `@releaseready` scope at GitHub Packages; a local install needs a token with

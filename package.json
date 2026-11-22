@@ -24,7 +24,8 @@
     "format:check": "prettier --check .",
     "test:quality": "node --import tsx --test tests/quality/*.test.ts",
     "check:guardrails": "releaseready-guardrails",
-    "check:offline": "npm run typecheck && npm run lint && npm run format:check && npm run check:guardrails && npm run test:quality && npm run test:setup && npm run test:smoke:offline"
+    "check:offline": "npm run typecheck && npm run lint && npm run format:check && npm run check:guardrails && npm run test:quality && npm run test:setup && npm run test:smoke:offline",
+    "prepare": "releaseready-hooks install"
   },
   "overrides": {
     "body-parser": "2.4.0",
@@ -34,7 +35,7 @@
     "minimatch": "11.0.5"
   },
   "devDependencies": {
-    "@releaseready/config": "^4.0.0",
+    "@releaseready/config": "^4.2.0",
     "@types/node": "22.19.11",
     "@wdio/allure-reporter": "10.1.0",
     "@wdio/appium-service": "10.1.1",
