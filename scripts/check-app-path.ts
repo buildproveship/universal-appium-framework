@@ -11,7 +11,11 @@ export async function checkAppPath(path: string): Promise<string | undefined> {
 }
 
 if (require.main === module) {
-  const { positionals } = parseArgs({ allowPositionals: true });
+  const { positionals } = parseArgs({
+    // "--" first makes every argument positional, so a path like -debug.apk is not read as an option.
+    args: ["--", ...process.argv.slice(2)],
+    allowPositionals: true,
+  });
   void checkAppPath(positionals[0] ?? "").then((problem) => {
     if (problem) {
       console.error(problem);
