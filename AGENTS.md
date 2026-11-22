@@ -32,3 +32,10 @@ The full list is in the code-quality skill: <https://github.com/releaseready/con
 
 - Never merge with a red or missing `pr.yml`.
 - The owner's local `merge-guard.sh` is the merge gate; this repo's `pr.yml` (`checks` job) is also enforced by branch protection.
+
+## Local hooks and CI
+
+- Husky runs the shared hooks from `@releaseready/config` (`releaseready-hooks`): pre-commit (lint-staged, gitleaks), commit-msg (Jira key) and pre-push (never `main`, rebased, type-check, affected tests). Never use `--no-verify` or `HUSKY=0`.
+- `.npmrc` sets `ignore-scripts=true`, so `prepare` does not run on `npm install`: run `npx releaseready-hooks install` once per clone.
+- CI is one required check, `ci`, from the reusable workflow in `releaseready/config`; it runs `npm run check:offline`. Run the same command locally before you push.
+- This repo is public, so its workflows run on GitHub-hosted `ubuntu-24.04` (a public repo never uses the self-hosted runner).
