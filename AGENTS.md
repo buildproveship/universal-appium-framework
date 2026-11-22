@@ -39,3 +39,10 @@ The full list is in the code-quality skill: <https://github.com/releaseready/con
 - `.npmrc` sets `ignore-scripts=true`, so `prepare` does not run on `npm install`: run `npx releaseready-hooks install` once per clone.
 - CI is one required check, `ci`, from the reusable workflow in `releaseready/config`; it runs `npm run check:offline`. Run the same command locally before you push.
 - This repo is public, so its workflows run on GitHub-hosted `ubuntu-24.04` (a public repo never uses the self-hosted runner).
+
+## Delivery rules
+
+- Rules for people and agents: [How we work](https://noisegatemusicstudios.atlassian.net/wiki/spaces/RRDOCS/pages/27328513) and [Reuse first](https://noisegatemusicstudios.atlassian.net/wiki/spaces/RRDOCS/pages/27230233).
+- Read only the ticket's **Agent brief** first ([template](https://noisegatemusicstudios.atlassian.net/wiki/spaces/RRDOCS/pages/26411190): Goal, Files, Done when, Blocked by/Reuses, Model); history and background are in the comments.
+- Before you create a ticket, a branch or a helper, search Jira and the Reuse first list, then extend or link what exists.
+- Fetch and rebase on `origin/main` before every push, open draft pull requests, and run the checks locally before CI.
