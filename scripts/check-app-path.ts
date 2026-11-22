@@ -1,4 +1,5 @@
 import { stat } from "node:fs/promises";
+import { parseArgs } from "node:util";
 
 // Fails (exit 1) unless the path is an Android .apk file or an iOS simulator .app directory.
 export async function checkAppPath(path: string): Promise<string | undefined> {
@@ -10,7 +11,8 @@ export async function checkAppPath(path: string): Promise<string | undefined> {
 }
 
 if (require.main === module) {
-  void checkAppPath(process.argv[2] ?? "").then((problem) => {
+  const { positionals } = parseArgs({ allowPositionals: true });
+  void checkAppPath(positionals[0] ?? "").then((problem) => {
     if (problem) {
       console.error(problem);
       process.exit(1);
