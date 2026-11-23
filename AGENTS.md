@@ -13,7 +13,7 @@ The check command is `npm run check:offline`; it runs `npm run check:guardrails`
 
 ## Defects we don't create
 
-The full list is in the code-quality skill: <https://github.com/releaseready/config/tree/main/skill/releaseready-code-quality>.
+The full list is in the code-quality skill: <https://github.com/buildproveship/config/tree/main/skill/releaseready-code-quality>.
 <!-- TODO(RRDSCRUM-438): swap this link for config/docs/defects-we-dont-create.md once it exists. -->
 
 - No legacy or compatibility code without a named consumer.
