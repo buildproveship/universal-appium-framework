@@ -1,5 +1,5 @@
-// ESLint: the shared @releaseready/config rules (type-aware through the TypeScript project service).
-import { releaseready } from "@releaseready/config/eslint";
+// ESLint: the shared @buildproveship/config rules (type-aware through the TypeScript project service).
+import { releaseready } from "@buildproveship/config/eslint";
 import { defineConfig } from "eslint/config";
 
 export default defineConfig(

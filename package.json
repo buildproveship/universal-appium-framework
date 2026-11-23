@@ -1,5 +1,5 @@
 {
-  "name": "@releaseready/appium-framework",
+  "name": "@buildproveship/appium-framework",
   "version": "1.0.0",
   "private": true,
   "description": "Reusable native mobile E2E testing template with WebdriverIO, Cucumber, TypeScript, and Appium",
@@ -35,7 +35,7 @@
     "minimatch": "11.0.5"
   },
   "devDependencies": {
-    "@releaseready/config": "^4.2.0",
+    "@buildproveship/config": "^5.0.1",
     "@types/node": "22.19.11",
     "@wdio/allure-reporter": "10.1.0",
     "@wdio/appium-service": "10.1.1",
@@ -53,6 +53,6 @@
     "typescript": "5.9.3",
     "yaml": "2.9.1"
   },
-  "prettier": "@releaseready/config/prettier",
+  "prettier": "@buildproveship/config/prettier",
   "license": "Apache-2.0"
 }

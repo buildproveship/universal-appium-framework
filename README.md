@@ -89,8 +89,8 @@ dependencies with `npm ci` and runs `npm run check:offline`. `.npmrc` sets `igno
 dependency lifecycle scripts stay disabled everywhere; the install-policy test keeps both in place. It
 does not authorize mobile setup. Run `npx releaseready-hooks install` once per clone to install the git hooks.
 
-ESLint, Prettier and the tsconfig base come from the shared `@releaseready/config` package
-(`.npmrc` points the `@releaseready` scope at GitHub Packages; a local install needs a token with
+ESLint, Prettier and the tsconfig base come from the shared `@buildproveship/config` package
+(`.npmrc` points the `@buildproveship` scope at GitHub Packages; a local install needs a token with
 `read:packages`). This aggregate runs type-checking, lint, formatting, lint-rule regression checks,
 app-path check tests, and hierarchy-validation tests. Individual
 commands remain available as `typecheck`, `lint`, `format:check`, `test:quality`,
