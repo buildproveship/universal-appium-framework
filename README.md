@@ -84,7 +84,7 @@ Run the same bounded checks before committing; `.github/workflows/pr.yml` runs t
 npm run check:offline
 ```
 
-The pull request workflow calls the shared CI in `releaseready/config`, which installs locked
+The pull request workflow calls the shared CI in `buildproveship/config`, which installs locked
 dependencies with `npm ci` and runs `npm run check:offline`. `.npmrc` sets `ignore-scripts=true`, so
 dependency lifecycle scripts stay disabled everywhere; the install-policy test keeps both in place. It
 does not authorize mobile setup. Run `npx releaseready-hooks install` once per clone to install the git hooks.
