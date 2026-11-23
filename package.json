@@ -35,7 +35,7 @@
     "minimatch": "11.0.5"
   },
   "devDependencies": {
-    "@buildproveship/config": "^5.0.1",
+    "@buildproveship/config": "^5.1.0",
     "@types/node": "22.19.11",
     "@wdio/allure-reporter": "10.1.0",
     "@wdio/appium-service": "10.1.1",

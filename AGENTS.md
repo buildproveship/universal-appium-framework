@@ -4,7 +4,7 @@ Read [.github/copilot-instructions.md](.github/copilot-instructions.md) before w
 
 ## Code quality (all changes)
 
-Follow `skills/releaseready-code-quality/SKILL.md` before writing code and before saying a change is done: no legacy
+Follow `skills/buildproveship-code-quality/SKILL.md` before writing code and before saying a change is done: no legacy
 or compatibility code without a named consumer; search npm, the SDK, the framework or the CLI before writing a
 helper; import shared code from `@buildproveship/test-management`, TDM `dev-fixtures`, `@buildproveship/config`,
 `@buildproveship/ui-web` or `@buildproveship/tokens`, never copy it; depend on published `^` versions only; never weaken
@@ -13,7 +13,7 @@ The check command is `npm run check:offline`; it runs `npm run check:guardrails`
 
 ## Defects we don't create
 
-The full list is in the code-quality skill: <https://github.com/buildproveship/config/tree/main/skill/releaseready-code-quality>.
+The full list is in the code-quality skill: <https://github.com/buildproveship/config/tree/main/skill/buildproveship-code-quality>.
 <!-- TODO(RRDSCRUM-438): swap this link for config/docs/defects-we-dont-create.md once it exists. -->
 
 - No legacy or compatibility code without a named consumer.
