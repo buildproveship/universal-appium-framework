@@ -47,3 +47,11 @@ test("AGENTS.md links the shared defects guide in code-governance and keeps no T
   );
   assert.doesNotMatch(agents, /TODO\(RRDSCRUM-438\)/);
 });
+
+test("docs/decisions.md records that appium and driver bumps are verified on a device only (RRDSCRUM-374)", () => {
+  const decisions = read("docs/decisions.md");
+  assert.match(decisions, /## \d+ \w+ 2026: Appium and driver bumps are device-only/);
+  assert.match(decisions, /`appium`/);
+  assert.match(decisions, /uiautomator2/);
+  assert.match(decisions, /xcuitest/);
+});
