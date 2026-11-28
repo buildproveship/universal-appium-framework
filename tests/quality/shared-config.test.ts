@@ -38,3 +38,12 @@ test("there is no repo-local Semgrep satisfies test: the shared security-scan ac
     false,
   );
 });
+
+test("AGENTS.md links the shared defects guide in code-governance and keeps no TODO for it (RRDPLAT-136)", () => {
+  const agents = read("AGENTS.md");
+  assert.match(
+    agents,
+    /pamirascent\/code-governance\/blob\/main\/docs\/defects-we-dont-create\.md/,
+  );
+  assert.doesNotMatch(agents, /TODO\(RRDSCRUM-438\)/);
+});
