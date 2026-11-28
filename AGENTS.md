@@ -13,8 +13,7 @@ The check command is `npm run check:offline`; it runs `npm run check:guardrails`
 
 ## Defects we don't create
 
-The full list is in the code-quality skill: <https://github.com/buildproveship/config/tree/main/skill/buildproveship-code-quality>.
-<!-- TODO(RRDSCRUM-438): swap this link for config/docs/defects-we-dont-create.md once it exists. -->
+The full list is the shared guide in code-governance: <https://github.com/pamirascent/code-governance/blob/main/docs/defects-we-dont-create.md>. The code-quality skill is `skills/buildproveship-code-quality/SKILL.md`.
 
 - No legacy or compatibility code without a named consumer.
 - Search npm, the SDK, the framework or the CLI before writing a helper.
