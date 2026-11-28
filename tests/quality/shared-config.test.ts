@@ -1,7 +1,7 @@
 // Test classification: unit
 // Review status: Not Reviewed
 // Evidence: synthetic
-// Scope: Reads wdio.shared.conf.ts, package.json and the workflow folder to check the repo uses the shared dotenv loader and Allure reporter from @buildproveship/config and keeps no local copy of the code-quality caller; it does not run WebdriverIO.
+// Scope: Reads wdio.shared.conf.ts, package.json and the workflow folder to check the repo uses the shared dotenv loader and Allure reporter from @buildproveship/config and keeps no local copy of the code-quality caller or the Semgrep satisfies test; it does not run WebdriverIO.
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -28,6 +28,13 @@ test("dotenv is not a direct dependency: the shared loader brings it", () => {
 test("there is no per-repo code-quality workflow caller: pr.yml runs the shared checks", () => {
   assert.equal(
     existsSync(resolve(root, ".github/workflows/code-quality.yml")),
+    false,
+  );
+});
+
+test("there is no repo-local Semgrep satisfies test: the shared security-scan action covers it (RRDSCRUM-395)", () => {
+  assert.equal(
+    existsSync(resolve(root, "tests/quality/semgrep-parse.test.ts")),
     false,
   );
 });
