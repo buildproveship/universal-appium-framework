@@ -20,7 +20,7 @@ test("pull request CI runs the offline checks through the shared workflow, with 
   assert.deepEqual(Object.keys(workflow.jobs), ["ci"]);
   assert.match(
     workflow.jobs.ci.uses,
-    /^buildproveship\/config\/\.github\/workflows\/reusable-ci\.yml@[0-9a-f]{40}$/,
+    /^pamirascent\/code-governance\/\.github\/workflows\/reusable-ci\.yml@[0-9a-f]{40}$/,
   );
   assert.deepEqual(workflow.jobs.ci.with, {
     runner: "ubuntu-24.04",
