@@ -2,6 +2,12 @@
 
 Owner decisions that change how this repository is built, checked or released. Newest first.
 
+## 28 November 2026: Appium and driver bumps are device-only
+
+- **Decided by:** the owner's code-review handover (RRDSCRUM-374), recorded here when its device-only condition was documented.
+- **Scope:** minor and patch bumps of dev tooling (ESLint, Prettier, TypeScript, types) are checked offline by `pr.yml`. A bump of `appium`, `@wdio/appium-service` or a driver (`uiautomator2`, `xcuitest`) changes how a real session runs, which `pr.yml` cannot see, so it lands only after `npm run test:android` or `npm run test:ios` passes on a device or simulator. Linux offline CI is not iOS proof.
+- **Done:** the offline-safe tooling bumps shipped under RRDSCRUM-394; the `appium` bump itself is left for a device run.
+
 ## 18 November 2026: light pull request checks in GitHub Actions
 
 - **Decided by:** the owner, choosing "Apply all six (Recommended)" for the cross-repo programme (recommendations 1 and 2).
