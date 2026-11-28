@@ -1,4 +1,7 @@
-import "dotenv/config";
+import { allureReporter } from "@buildproveship/config/allure";
+import { loadEnv } from "@buildproveship/config/dotenv";
+
+loadEnv();
 
 type SharedConfig = Omit<WebdriverIO.Config, "capabilities">;
 
@@ -13,15 +16,7 @@ export const sharedConfig: SharedConfig = {
   maxInstances: 1,
   logLevel: "info",
   framework: "cucumber",
-  reporters: [
-    "spec",
-    [
-      "allure",
-      {
-        outputDir: "allure-results",
-      },
-    ],
-  ],
+  reporters: ["spec", allureReporter()],
   services: [
     [
       "appium",
